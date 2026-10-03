@@ -41,7 +41,7 @@ export class Player {
   control = 0;
   lookControl = 0;
   sensitivity = 1;
-  /** head bob, sway and lean scale (accessibility setting) */
+  /** additional camera motion, including breathing, landing and cinematic shake */
   motion = 1;
   private gait = 0;
   private gaitAmp = 0;
@@ -207,10 +207,10 @@ export class Player {
     const sway = Math.sin(this.gait) * 0.006 * this.gaitAmp * bobScale;
     const nod = c2 * 0.0022 * this.gaitAmp * bobScale;
     const stepRoll = Math.sin(this.gait) * 0.0012 * this.gaitAmp * bobScale;
-    const breathe = Math.sin(time * 1.3) * 0.0035;
-    const shakeX = this.shake > 0 ? (Math.sin(time * 61) + Math.sin(time * 37)) * 0.004 * this.shake : 0;
-    const shakeY = this.shake > 0 ? (Math.sin(time * 53) + Math.sin(time * 29)) * 0.005 * this.shake : 0;
-    _e.set(this.pitch + shakeY - this.settle * 0.04 + nod + this.lean * bobScale, this.yaw + shakeX, stepRoll + this.roll * bobScale);
+    const breathe = Math.sin(time * 1.3) * 0.0035 * bobScale;
+    const shakeX = this.shake > 0 ? (Math.sin(time * 61) + Math.sin(time * 37)) * 0.004 * this.shake * bobScale : 0;
+    const shakeY = this.shake > 0 ? (Math.sin(time * 53) + Math.sin(time * 29)) * 0.005 * this.shake * bobScale : 0;
+    _e.set(this.pitch + shakeY - this.settle * 0.04 * bobScale + nod + this.lean * bobScale, this.yaw + shakeX, stepRoll + this.roll * bobScale);
     _q.setFromEuler(_e);
     this.camera.quaternion.copy(_q);
 
@@ -222,7 +222,7 @@ export class Player {
     _v.set(sway, 0, 0).applyAxisAngle(_v2.set(0, 1, 0), this.yaw);
     this.camera.position.set(
       this.position.x + _v.x,
-      this.eyeY + bob + breathe - this.settle * 0.12,
+      this.eyeY + bob + breathe - this.settle * 0.12 * bobScale,
       this.position.z + _v.z,
     );
   }

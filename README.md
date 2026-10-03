@@ -23,6 +23,14 @@ nie wymaga konta, serwera aplikacyjnego ani kluczy API.
 
 Menu pozwala kontynuować od zapisanego rozdziału, wybrać odblokowane piętro,
 przejrzeć wpisy oraz ustawić głośność, czułość myszy, kołysanie i język.
+Kołysanie ustawione na `0` wyłącza dodatkowe ruchy kamery, także oddychanie
+i wstrząsy. Karta przeglądów dopasowuje układ do okna; dłuższy tekst można
+przewijać, również klawiaturą po przeniesieniu na niego fokusu klawiszem Tab.
+
+Na szczycie pojawia się wskazówka zapowiadająca finał. Rozpoczyna go podejście
+do krawędzi platformy, a nie upływ czasu. Można spokojnie przeczytać ostatni
+wpis; po odwróceniu wzroku pozostają jeszcze trzy sekundy przed możliwym
+rozpoczęciem zakończenia.
 
 ## Praca lokalna
 

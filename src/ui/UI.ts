@@ -34,6 +34,7 @@ export class UI {
   private led = $('#led');
   private sheet = $('#sheet');
   private reader = $('#reader');
+  private finaleAvailable = false;
   private pages = new Map<Page, HTMLElement>();
   private page: Page = 'main';
   private root: Page = 'main';
@@ -61,6 +62,7 @@ export class UI {
     onLang(() => {
       if (this.progress) this.build();
       this.menuEl.setAttribute('aria-label', this.mode === 'pause' ? t('paused') : 'The Elevator');
+      this.refreshFinalePrompt();
     });
   }
 
@@ -90,6 +92,7 @@ export class UI {
 
   menu(mode: MenuMode) {
     this.mode = mode;
+    this.refreshFinalePrompt();
     if (mode === 'hidden') {
       this.show(this.menuEl, false);
       return;
@@ -284,15 +287,33 @@ export class UI {
     $('#reader-date').textContent = formatDate(e.date);
     $('#reader-count').textContent = count;
     $('#reader-body').textContent = e.text[lang()];
+    $('#reader-finale').hidden = e.id !== 'summit';
+    $('#reader-finale').textContent = t('hint.finale');
     this.reader.classList.add('is-visible');
+    this.refreshFinalePrompt();
   }
 
   unread() {
     this.reader.classList.remove('is-visible');
+    this.refreshFinalePrompt();
   }
 
   get reading() {
     return this.reader.classList.contains('is-visible');
+  }
+
+  setFinaleAvailable(available: boolean) {
+    if (this.finaleAvailable === available) return;
+    this.finaleAvailable = available;
+    this.refreshFinalePrompt();
+  }
+
+  private refreshFinalePrompt() {
+    const el = $('#finale-prompt');
+    const visible = this.finaleAvailable && this.mode === 'hidden' && !this.reading;
+    const text = visible ? t('hint.finale') : '';
+    if (el.textContent !== text) el.textContent = text;
+    el.hidden = !visible;
   }
 
   /** a quiet line at the bottom of the screen; html allowed for <b> */

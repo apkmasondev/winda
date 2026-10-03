@@ -42,9 +42,10 @@ export function world() {
   const uniforms = (names) => Object.fromEntries(names.map(n => [n, { value: n.includes('Color') ? new THREE.Color() : n.includes('Pos') ? new THREE.Vector3() : 0 }]));
   const video = Object.assign(new EventTarget(), { pause: noop, play: async () => {}, classList: { add: noop, remove: noop }, style: {}, duration: 10, currentTime: 0 });
   const app = { hall, stepwell, summit, colliders, camera, player, audio, input, video, paused: false,
-    settings: { sound: 4, look: 3 }, filmFov: () => 41, resume: noop, rig: makeCabinRig(),
+    settings: { sound: 4, look: 3, motion: 4, lang: 'en' }, filmFov: () => 41, resume: noop, rig: makeCabinRig(),
     renderer: { domElement: { height: 1080 } },
-    ui: { show: noop, hush: noop, whisper: noop, menu: noop, showEnd: noop, read: noop, unread: noop, reading: false },
+    ui: { show: noop, hush: noop, whisper: noop, menu: noop, showEnd: noop, read: noop, unread: noop, reading: false,
+      finaleAvailable: false, setFinaleAvailable(value) { this.finaleAvailable = value; } },
     progress: loadProgress(),
     sky: { uniforms: uniforms(['uStars', 'uDawn', 'uSeam', 'uSeamOpen']) },
     dust: { uniforms: uniforms(['uOpacity', 'uLightPos', 'uLightColor']) },

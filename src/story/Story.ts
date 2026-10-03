@@ -64,6 +64,10 @@ export class Story {
     return this.progress.found.length;
   }
 
+  get isReading() {
+    return this.reading !== null;
+  }
+
   update(dt: number, time: number) {
     const id = this.plaques.update(dt, this.app.camera, time);
     if (id) {
