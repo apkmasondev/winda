@@ -1,0 +1,435 @@
+:root {
+  --ink: #ece6da;
+  --ink-dim: rgba(236, 230, 218, 0.5);
+  --ink-faint: rgba(236, 230, 218, 0.24);
+  --warm: #ffd9a8;
+  --warm-glow: rgba(255, 176, 100, 0.45);
+  --bronze: rgba(255, 214, 170, 0.62);
+  --led: #ff3b24;
+  --steel-hi: rgba(255, 255, 255, 0.09);
+  --font: 'Helvetica Neue', 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif;
+  --serif: Georgia, 'Times New Roman', serif;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #000;
+  color: var(--ink);
+  font-family: var(--font);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+#gl, #intro {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  background: #000;
+}
+
+#intro {
+  object-fit: cover;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s linear;
+}
+#intro.is-playing { opacity: 1; }
+
+#ui { position: fixed; inset: 0; pointer-events: none; visibility: visible; }
+
+.layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1.4s ease, visibility 0s linear 1.4s;
+}
+.layer.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 1.4s ease, visibility 0s;
+}
+
+/* ---------------------------------------------------------------- menu */
+
+/* the panel hangs in the dark under a faint, warm cabin light */
+#menu {
+  background:
+    radial-gradient(ellipse 34% 42% at 50% 47%, rgba(255, 196, 140, 0.05), rgba(255, 196, 140, 0) 70%),
+    #000;
+  gap: 0;
+  transition: opacity 0.9s ease, visibility 0s linear 0.9s;
+}
+#menu.is-visible { transition: opacity 0.9s ease, visibility 0s; }
+#menu[data-mode='pause'] {
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.82) 72%);
+  backdrop-filter: blur(3px) saturate(0.7);
+  transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+}
+#menu[data-mode='pause'].is-visible { transition: opacity 0.5s ease, visibility 0s; }
+#menu[data-mode='pause'] .wordmark,
+#menu[data-mode='pause'] .aside { visibility: hidden; }
+#menu > .wordmark { margin: 0 0 32px; }
+
+#menu.is-visible .plate { animation: plate-in 1.2s var(--ease-out) both; }
+#menu.is-visible > .wordmark { animation: fade-in 1.6s ease 0.25s both; }
+#menu[data-mode='pause'].is-visible .plate { animation-duration: 0.5s; }
+@keyframes plate-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.console {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.page { display: flex; flex-direction: column; gap: 0; }
+.page[hidden] { display: none; }
+.page:not([hidden]) { animation: page-in 0.38s var(--ease-out) both; }
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+.page-title {
+  margin: 0 0 10px;
+  font-size: 8.5px;
+  letter-spacing: 0.44em;
+  text-transform: uppercase;
+  color: var(--bronze);
+  opacity: 0.7;
+}
+.page-note {
+  margin: 0 0 12px;
+  font: italic 12px/1.6 var(--serif);
+  color: var(--ink-dim);
+}
+
+/* a card of text: the log on the menu, a plate being read in the world */
+.sheet, .reader {
+  border-radius: 3px;
+  background: linear-gradient(180deg, rgba(30, 25, 19, 0.62), rgba(14, 12, 10, 0.62));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 228, 190, 0.07),
+    inset 0 0 0 1px rgba(255, 220, 170, 0.06),
+    0 24px 70px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(14px) saturate(0.8);
+  -webkit-backdrop-filter: blur(14px) saturate(0.8);
+}
+
+.sheet {
+  position: absolute;
+  left: calc(100% + 30px);
+  top: 0;
+  width: 300px;
+  padding: 22px 24px 24px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-6px);
+  transition: opacity 0.4s ease, transform 0.4s var(--ease-out), visibility 0s linear 0.4s;
+}
+.sheet.is-visible { opacity: 1; visibility: visible; transform: none; transition: opacity 0.4s ease, transform 0.4s var(--ease-out), visibility 0s; }
+.sheet-head, .reader-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  margin: 0 0 13px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 214, 170, 0.14);
+  font-size: 9px;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: var(--bronze);
+}
+.sheet-body, .reader-body {
+  margin: 0;
+  font: italic 14px/1.78 var(--serif);
+  color: rgba(242, 233, 218, 0.9);
+  white-space: pre-line;
+  text-wrap: pretty;
+}
+
+@media (max-width: 760px) {
+  .sheet { position: static; margin-top: 18px; width: 236px; }
+  .console { flex-direction: column; align-items: center; }
+  .sheet:not(.is-visible) { display: none; }
+}
+@media (max-height: 560px) {
+  #menu > .wordmark { margin-bottom: 14px; }
+  .plate { padding-top: 18px; }
+}
+
+.wordmark {
+  margin: 34px 0 0;
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 0.66em;
+  text-indent: 0.66em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.aside {
+  position: absolute;
+  bottom: 38px;
+  margin: 0;
+  font-size: 9.5px;
+  font-weight: 300;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  text-transform: lowercase;
+  color: var(--ink-faint);
+}
+
+/* ---------------------------------------------------------------- hint */
+
+.hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 9vh;
+  margin: 0;
+  text-align: center;
+  font-size: 10.5px;
+  font-weight: 300;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  text-transform: lowercase;
+  color: rgba(236, 230, 218, 0.55);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  transition: opacity 2.4s ease;
+  white-space: pre;
+}
+.hint.is-visible { opacity: 1; }
+.hint b { font-weight: 400; color: rgba(236, 230, 218, 0.82); }
+/* a plate being read has the bottom of the screen; the hint waits */
+#ui:has(.reader.is-visible) .hint { opacity: 0; transition-duration: 0.6s; }
+
+/* ---------------------------------------------------------------- panel */
+
+/* brushed stainless, four countersunk screws, a bevel catching the light */
+.plate {
+  --screw: radial-gradient(circle, #6a6a70 0 1.4px, #2a2a2f 2.2px, #0d0d10 3px, rgba(0, 0, 0, 0) 3.6px);
+  position: relative;
+  width: 236px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding: 32px 28px 22px;
+  border-radius: 4px;
+  background:
+    var(--screw) 9px 9px / 8px 8px no-repeat,
+    var(--screw) calc(100% - 9px) 9px / 8px 8px no-repeat,
+    var(--screw) 9px calc(100% - 9px) / 8px 8px no-repeat,
+    var(--screw) calc(100% - 9px) calc(100% - 9px) / 8px 8px no-repeat,
+    linear-gradient(180deg, rgba(255, 238, 214, 0.035), rgba(255, 238, 214, 0) 30%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.014) 0 1px, rgba(0, 0, 0, 0.018) 1px 2px, rgba(255, 255, 255, 0.006) 2px 4px),
+    linear-gradient(180deg, #26262c 0%, #18181c 46%, #1c1c21 100%);
+  box-shadow:
+    inset 0 1px 0 var(--steel-hi),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.035),
+    0 0 0 1px rgba(0, 0, 0, 0.85),
+    0 40px 90px rgba(0, 0, 0, 0.75);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.plate::-webkit-scrollbar { display: none; }
+
+/* recessed indicator window with a glass sheen */
+.led {
+  position: relative;
+  overflow: hidden;
+  flex: none;
+  height: 44px;
+  margin: 0 0 18px;
+  border-radius: 2px;
+  background: radial-gradient(ellipse 70% 90% at 50% 50%, #140807, #070404);
+  box-shadow:
+    inset 0 2px 8px rgba(0, 0, 0, 0.95),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.8),
+    0 1px 0 rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.led::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(168deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0) 42%);
+  pointer-events: none;
+}
+.led svg { height: 24px; overflow: visible; }
+.led .seg { fill: rgba(255, 59, 36, 0.07); }
+.led .seg.on { fill: var(--led); filter: drop-shadow(0 0 3px rgba(255, 50, 30, 0.85)); }
+
+.key {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  color: var(--ink-dim);
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.key.is-back {
+  margin-top: 10px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.045);
+}
+
+/* a real car button: dished face inside a turned steel ring; the ring lights */
+.lens {
+  position: relative;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0) 55%),
+    radial-gradient(circle at 50% 50%, #1b1b1f 0 58%, #2c2c32 64%, #121215 72%, #3a3a41 78%, #151518 100%);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.75),
+    0 1px 0 1px rgba(255, 255, 255, 0.04),
+    0 2px 4px rgba(0, 0, 0, 0.7);
+  transition: transform 0.12s ease;
+}
+.lens::after {
+  /* the light ring, off until hovered or focused */
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(255, 214, 170, 0);
+  transition: box-shadow 0.35s ease;
+}
+.lens svg { width: 14px; height: 14px; fill: none; stroke: rgba(236, 230, 218, 0.48); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.3s ease, filter 0.3s ease; }
+.glyph { font-size: 10.5px; letter-spacing: 0.04em; color: rgba(236, 230, 218, 0.52); transition: color 0.3s ease, text-shadow 0.3s ease; }
+.label {
+  flex: 1;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-weight: 400;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.85);
+  transition: color 0.3s ease, transform 0.35s var(--ease-out);
+}
+.sub { font-size: 8.5px; letter-spacing: 0.22em; text-transform: lowercase; color: var(--bronze); opacity: 0.6; white-space: nowrap; }
+
+.key:not(:disabled):hover .lens::after,
+.key:not(:disabled):focus-visible .lens::after {
+  box-shadow: 0 0 0 1px rgba(255, 214, 170, 0.85), 0 0 10px 1px var(--warm-glow), inset 0 0 6px rgba(255, 180, 110, 0.25);
+}
+.key:not(:disabled):hover .lens svg, .key:not(:disabled):focus-visible .lens svg { stroke: var(--warm); filter: drop-shadow(0 0 3px rgba(255, 190, 120, 0.7)); }
+.key:not(:disabled):hover .glyph, .key:not(:disabled):focus-visible .glyph { color: var(--warm); text-shadow: 0 0 6px rgba(255, 190, 120, 0.8); }
+.key:not(:disabled):hover .label, .key:not(:disabled):focus-visible .label { color: var(--ink); transform: translateX(2px); }
+.key:not(:disabled):active .lens { transform: scale(0.95); }
+.key:disabled { cursor: default; opacity: 0.3; }
+
+/* the first key of the main page breathes like a call button waiting */
+.page[data-page='main'] .key:first-child:not(:disabled) .lens::after { animation: breathe 3.6s ease-in-out infinite; }
+.page[data-page='main'] .key:first-child:not(:disabled):hover .lens::after,
+.page[data-page='main'] .key:first-child:not(:disabled):focus-visible .lens::after { animation: none; }
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(255, 214, 170, 0.06); }
+  50% { box-shadow: 0 0 0 1px rgba(255, 214, 170, 0.5), 0 0 8px rgba(255, 176, 100, 0.22); }
+}
+
+.pips { display: flex; gap: 3px; }
+.pips i { width: 4px; height: 10px; border-radius: 1px; background: rgba(255, 255, 255, 0.07); box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.6); transition: background 0.3s ease, box-shadow 0.3s ease; }
+.pips i.on { background: rgba(255, 214, 170, 0.78); box-shadow: 0 0 5px rgba(255, 180, 110, 0.55); }
+
+/* ---------------------------------------------------------------- reader */
+
+.reader {
+  position: absolute;
+  left: 50%;
+  bottom: 9vh;
+  width: min(520px, calc(100vw - 32px));
+  margin: 0;
+  padding: 20px 28px 24px;
+  transform: translate(-50%, 8px);
+  text-align: left;
+  opacity: 0;
+  transition: opacity 0.8s ease, transform 0.8s var(--ease-out);
+}
+.reader.is-visible { opacity: 1; transform: translate(-50%, 0); }
+.reader-body { font-size: 15px; }
+
+/* ---------------------------------------------------------------- end */
+
+#end {
+  background:
+    radial-gradient(ellipse 40% 40% at 50% 48%, rgba(255, 196, 140, 0.04), rgba(255, 196, 140, 0) 70%),
+    #000;
+  transition: opacity 3s ease, visibility 0s linear 3s;
+}
+#end.is-visible { transition: opacity 3s ease, visibility 0s; }
+#end > .wordmark { margin: 0 0 36px; }
+.end-line {
+  margin: 0 0 8px;
+  font: italic 16px/1.7 var(--serif);
+  color: rgba(242, 233, 218, 0.86);
+  text-align: center;
+  padding: 0 16px;
+}
+.end-line.is-dim { color: var(--ink-dim); font-size: 15px; }
+.end-count {
+  margin: 26px 0 34px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 214, 170, 0.12);
+  min-width: 160px;
+  text-align: center;
+  font-size: 9px;
+  letter-spacing: 0.44em;
+  text-indent: 0.44em;
+  text-transform: uppercase;
+  color: var(--bronze);
+  opacity: 0.75;
+}
+.end-keys { display: flex; gap: 40px; }
+.end-keys .key { width: auto; }
+/* the card writes itself, line by line */
+#end.is-visible > * { animation: fade-in 2.4s ease both; }
+#end.is-visible > .end-line { animation-delay: 0.8s; }
+#end.is-visible > .end-line.is-dim { animation-delay: 1.8s; }
+#end.is-visible > .end-count { animation-delay: 2.6s; }
+#end.is-visible > .end-keys { animation-delay: 3.2s; }
+
+#unsupported { color: var(--ink-dim); }
+
+body.is-locked { cursor: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-delay: 0s !important; }
+}

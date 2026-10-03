@@ -1,0 +1,28 @@
+{
+  "beds": {
+    "hall": {
+      "file": "hall.m4a",
+      "gain": 0.55,
+      "loopStart": 0.25,
+      "loopEnd": 64.65
+    },
+    "stepwell": {
+      "file": "stepwell.m4a",
+      "gain": 0.5,
+      "loopStart": 0.25,
+      "loopEnd": 57.85
+    },
+    "summit": {
+      "file": "summit.m4a",
+      "gain": 0.6,
+      "loopStart": 0.25,
+      "loopEnd": 62.41025
+    },
+    "canyon": {
+      "file": "hall.m4a",
+      "gain": 0.3,
+      "loopStart": 0.25,
+      "loopEnd": 64.65
+    }
+  }
+}

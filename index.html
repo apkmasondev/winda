@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000" />
+    <title>The Elevator</title>
+    <!-- critical: never show a white frame or unstyled text, even for a moment -->
+    <style>
+      html, body { margin: 0; height: 100%; background: #000; color: #000; overflow: hidden; }
+      #ui { visibility: hidden; }
+    </style>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <video id="intro" playsinline preload="auto" disablepictureinpicture></video>
+
+    <main id="ui">
+      <!-- the car operating panel: main menu, pause and every sub-page -->
+      <section id="menu" class="layer is-visible" data-mode="main" aria-label="The Elevator">
+        <h1 class="wordmark">The Elevator</h1>
+        <div class="console">
+          <div class="plate" id="plate">
+            <div class="led" id="led" aria-hidden="true"></div>
+            <div class="page" data-page="main"></div>
+            <div class="page" data-page="pause"></div>
+            <div class="page" data-page="floors"></div>
+            <div class="page" data-page="log"></div>
+            <div class="page" data-page="settings"></div>
+          </div>
+          <article class="sheet" id="sheet" aria-live="polite">
+            <p class="sheet-head"><span id="sheet-floor"></span><span id="sheet-date"></span></p>
+            <p class="sheet-body" id="sheet-body"></p>
+          </article>
+        </div>
+        <p class="aside" data-i18n="headphones">headphones</p>
+      </section>
+
+      <!-- one-time, quiet instructions -->
+      <p id="hint" class="hint" aria-live="polite"></p>
+
+      <!-- a plate, read where it hangs -->
+      <aside id="reader" class="reader" aria-live="polite">
+        <p class="reader-head"><span id="reader-floor"></span><span id="reader-date"></span><span id="reader-count"></span></p>
+        <p class="reader-body" id="reader-body"></p>
+      </aside>
+
+      <!-- end -->
+      <section id="end" class="layer" aria-label="The end">
+        <h2 class="wordmark">The Elevator</h2>
+        <p class="end-line" id="end-inspection"></p>
+        <p class="end-line is-dim" data-i18n="endNext"></p>
+        <p class="end-count" id="end-found"></p>
+        <div class="end-keys" id="end-keys"></div>
+      </section>
+
+      <p id="unsupported" class="layer aside">This experience needs WebGL 2 and a desktop browser.</p>
+    </main>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
