@@ -174,8 +174,8 @@ test('camera preference and language survive reload; finale guidance is localize
   document.documentElement = { lang: '' };
   document.querySelectorAll = () => [];
   setLang('pl');
-  assert.match(t('hint.finale'), /finał.*krawędzi/);
+  assert.match(t('hint.finale'), /ostatni wpis.*krawędzi.*finał/);
   setLang('en');
-  assert.match(t('hint.finale'), /edge.*finale/);
+  assert.match(t('hint.finale'), /final entry.*lectern.*edge.*finale/);
   assert.equal(document.documentElement.lang, 'en');
 });
