@@ -4,7 +4,7 @@ Atmosferyczne doświadczenie 3D w przeglądarce. Zjazd windą prowadzi do ogromn
 hali, wiszących schodów i miejsc, których nie ma w projekcie budynku.
 Tabliczki pozostawione przez konserwatora składają się na kartę przeglądów.
 
-**[Uruchom grę](https://apkmasondev.github.io/winda/)**
+**[Uruchom grę](https://apkmason.dev/winda/)**
 
 Gra wymaga komputera, klawiatury, myszy oraz przeglądarki obsługującej WebGL 2.
 Polecane są słuchawki. Interfejs i wpisy są dostępne po polsku i po angielsku.
