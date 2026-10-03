@@ -29,7 +29,7 @@
             <div class="page" data-page="log"></div>
             <div class="page" data-page="settings"></div>
           </div>
-          <article class="sheet" id="sheet" aria-live="polite">
+          <article class="sheet" id="sheet" aria-live="polite" tabindex="0">
             <p class="sheet-head"><span id="sheet-floor"></span><span id="sheet-date"></span></p>
             <p class="sheet-body" id="sheet-body"></p>
           </article>
@@ -39,11 +39,13 @@
 
       <!-- one-time, quiet instructions -->
       <p id="hint" class="hint" aria-live="polite"></p>
+      <p id="finale-prompt" class="finale-prompt" aria-live="polite" hidden></p>
 
       <!-- a plate, read where it hangs -->
       <aside id="reader" class="reader" aria-live="polite">
         <p class="reader-head"><span id="reader-floor"></span><span id="reader-date"></span><span id="reader-count"></span></p>
         <p class="reader-body" id="reader-body"></p>
+        <p class="reader-finale" id="reader-finale" data-i18n="hint.finale" hidden></p>
       </aside>
 
       <!-- end -->

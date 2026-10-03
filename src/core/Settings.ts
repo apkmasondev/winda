@@ -35,5 +35,5 @@ export function saveSettings(s: Settings) {
 
 export const soundGain = (level: number) => (level <= 0 ? 0 : Math.pow(level / 5, 1.6) * 1.0);
 export const lookScale = (level: number) => [0.5, 0.7, 1.0, 1.35, 1.8][Math.min(5, Math.max(1, level)) - 1];
-/** head bob, sway and body lean: 0 (off) .. 1 (default, level 4) .. 1.25 */
+/** Additional camera motion: 0 (off) .. 1 (default, level 4) .. 1.25. */
 export const motionScale = (level: number) => Math.min(5, Math.max(0, level)) * 0.25;

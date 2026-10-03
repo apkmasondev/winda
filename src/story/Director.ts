@@ -62,6 +62,7 @@ export class Director {
   private runHintShown = false;
   private elevatorArrived = false;
   private summitClock = 0;
+  private readingGrace = 0;
   private finaleStarted = false;
   private counter = 0;
   private hallLight = 0;
@@ -103,6 +104,8 @@ export class Director {
     this.runHintShown = false;
     this.elevatorArrived = false;
     this.summitClock = 0;
+    this.readingGrace = 0;
+    a.ui.setFinaleAvailable(false);
     this.finaleStarted = false;
     this.stepwellElevatorHeard = false;
     this.hallLight = 1;
@@ -817,9 +820,14 @@ export class Director {
     p.lookControl = Math.min(1, p.lookControl + dt / 1.5);
     if (a.post.fade > 0) a.post.fade = Math.max(0, a.post.fade - dt * 0.8);
     this.summitClock += dt;
+    // The ending is a deliberate approach to the edge, never an idle timeout.
+    // Reading (including its brief linger) always takes precedence.
+    a.ui.setFinaleAvailable(this.summitClock > 2);
+    if (a.story.isReading) this.readingGrace = 3;
+    else this.readingGrace = Math.max(0, this.readingGrace - dt);
     const local = p.position.clone().sub(a.summit.origin);
     const outside = !a.summit.elevator.contains(p.position, 0.2);
-    if (!this.finaleStarted && ((outside && local.z < a.summit.edgeZ + 3) || (outside && this.summitClock > 45) || this.summitClock > 80)) {
+    if (!this.finaleStarted && !a.story.isReading && this.readingGrace === 0 && outside && local.z < a.summit.edgeZ + 3) {
       this.startFinale();
     }
   }
@@ -832,6 +840,7 @@ export class Director {
     this.state = 'finale';
     this.finaleT = 0;
     this.tl.reset();
+    a.ui.setFinaleAvailable(false);
     a.story.close();
     a.audio.swell(13);
     this.tl.at(16.5, () => a.audio.hush(3));
